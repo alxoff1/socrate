@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Notaires de France - Consignes de Sécurité</title>
+    <style>
+        :root {
+            --notary-blue: #1a2a40;
+            --notary-gold: #c5a059;
+            --notary-teal: #40b3a2;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            background: linear-gradient(-45deg, #e2ebf0, #cfd9df, #fdfbfb, #ebedee);
+            background-size: 400% 400%; 
+            animation: gradientBG 15s ease infinite;
+            -webkit-user-select: none; 
+            user-select: none;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradientBG { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+
+        /* HEADER RESPONSIVE INTELLIGENT */
+        .main-header {
+            background: white; 
+            padding: 12px 3%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .header-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            flex: 1 1 auto;
+            min-width: 200px;
+        }
+        
+        .brand-container { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            text-decoration: none; 
+            flex-shrink: 0;
+        }
+        
+        .brand-logo { 
+            height: 35px; 
+            vertical-align: middle;
+        }
+        
+        .brand-text { 
+            font-size: 1.3rem; 
+            font-weight: 900; 
+            color: var(--notary-blue); 
+            white-space: nowrap;
+        }
+        
+        @media (min-width: 768px) {
+            .brand-text { font-size: 1.6rem; }
+            .brand-logo { height: 40px; }
+        }
+        
+        .brand-text span { color: var(--notary-gold); }
+        
+        .search-bar { 
+            background: #f1f3f4; 
+            border-radius: 25px; 
+            padding: 6px 15px; 
+            width: 100%; 
+            max-width: 250px;
+            display: flex; 
+            align-items: center; 
+        }
+        
+        .search-bar input { 
+            border: none; 
+            background: transparent; 
+            width: 100%; 
+            outline: none; 
+            font-size: 0.9rem;
+        }
+        
+        .header-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        
+        /* BOUTONS PROGRESSIFS */
+        .btn { 
+            padding: 8px 12px; 
+            border-radius: 20px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 0.65rem; 
+            transition: 0.3s; 
+            white-space: nowrap;
+        }
+        
+        /* Par défaut (mobile) : les boutons SERVICES et ANNUAIRE sont cachés */
+        .btn-teal, .btn-dark {
+            display: none;
+        }
+        
+        /* Le sélecteur de langue est caché sur mobile */
+        .lang-selector {
+            display: none;
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 0.7rem; 
+            border: 1px solid #ddd; 
+            padding: 6px 8px; 
+            border-radius: 5px; 
+            color: var(--notary-blue); 
+            align-items: center; 
+            gap: 3px;
+            white-space: nowrap;
+        }
+        
+        /* À partir de 480px (grands smartphones), on affiche le sélecteur de langue */
+        @media (min-width: 480px) {
+            .lang-selector {
+                display: flex;
+            }
+        }
+        
+        /* À partir de 640px (petites tablettes), on affiche le bouton ANNUAIRE */
+        @media (min-width: 640px) {
+            .btn-dark {
+                display: inline-block;
+                background: var(--notary-blue); 
+                color: white;
+            }
+        }
+        
+        /* À partir de 860px (tablettes/petits desktop), on affiche le bouton SERVICES */
+        @media (min-width: 860px) {
+            .btn-teal {
+                display: inline-block;
+                background: var(--notary-teal); 
+                color: white;
+            }
+        }
+        
+        /* Ajustements pour les très grands écrans */
+        @media (min-width: 1024px) {
+            .btn { 
+                padding: 10px 20px; 
+                font-size: 0.75rem; 
+            }
+            
+            .lang-selector { 
+                font-size: 0.8rem; 
+                padding: 8px 12px; 
+            }
+        }
+
+        /* CONTENU DES CONSIGNES RESPONSIVE AVEC FOURNISSEURS */
+        .main-content { 
+            flex-grow: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 30px 15px; 
+        }
+        
+        @media (min-width: 768px) {
+            .main-content { padding: 40px 20px; }
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.96); 
+            backdrop-filter: blur(15px); 
+            width: 100%; 
+            max-width: 600px;
+            padding: 25px 20px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        
+        @media (min-width: 480px) {
+            .info-card { padding: 30px 25px; }
+        }
+        
+        @media (min-width: 768px) {
+            .info-card { padding: 40px; }
+        }
+        
+        .info-card h2 {
+            color: var(--notary-blue);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .info-card h2 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+        }
+        
+        .info-logo {
+            width: 60px;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .info-logo { width: 70px; margin-bottom: 20px; }
+        }
+        
+        /* SECTION FOURNISSEURS DANS LES CONSIGNES */
+        .providers-preview {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            padding: 20px 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(64, 179, 162, 0.2);
+        }
+        
+        .providers-preview h3 {
+            color: var(--notary-blue);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .providers-preview h3 span {
+            background: var(--notary-teal);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        
+        .mini-providers {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .mini-provider-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .mini-provider-logo {
+            height: 30px;
+            width: 30px;
+            object-fit: contain;
+            background: white;
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .mini-provider-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--notary-blue);
+        }
+        
+        @media (min-width: 768px) {
+            .mini-provider-logo {
+                height: 35px;
+                width: 35px;
+                padding: 6px;
+            }
+            
+            .mini-provider-name {
+                font-size: 0.75rem;
+            }
+        }
+        
+        .instruction-box {
+            text-align: left; 
+            background: #f8fafc; 
+            border-left: 5px solid var(--notary-gold);
+            padding: 15px; 
+            margin: 20px 0; 
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .instruction-box {
+                padding: 20px;
+                margin: 25px 0;
+                font-size: 1rem;
+            }
+        }
+        
+        .step-number {
+            background: var(--notary-blue); 
+            color: white; 
+            width: 22px; 
+            height: 22px;
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            border-radius: 50%; 
+            font-size: 0.75rem; 
+            margin-right: 8px;
+        }
+        
+        @media (min-width: 768px) {
+            .step-number {
+                width: 25px; 
+                height: 25px;
+                font-size: 0.8rem; 
+                margin-right: 10px;
+            }
+        }
+        
+        .instruction-box p {
+            margin-bottom: 12px;
+        }
+        
+        .instruction-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .provider-example {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            border: 1px dashed var(--notary-teal);
+        }
+        
+        .provider-example-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .provider-example-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .provider-example-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+        
+        .provider-example-text {
+            font-size: 0.85rem;
+            color: var(--notary-blue);
+        }
+        
+        .provider-example-text strong {
+            color: var(--notary-teal);
+        }
+        
+        .btn-proceed {
+            width: 100%; 
+            padding: 14px; 
+            background: var(--notary-teal); 
+            color: white;
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer;
+            text-decoration: none; 
+            display: block; 
+            transition: 0.3s; 
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .btn-proceed {
+                padding: 18px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        .btn-proceed:hover {
+            background: var(--notary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: var(--notary-blue);
+            opacity: 0.7;
+        }
+        
+        .security-badge i {
+            font-style: normal;
+            background: var(--notary-gold);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+       /* --- FOOTER RESPONSIVE --- */
+        .main-footer { 
+            background-color: var(--notary-blue); 
+            color: var(--footer-text); 
+            padding: 40px 5% 15px; 
+            font-size: 0.8rem; 
+        }
+        
+        @media (min-width: 768px) {
+            .main-footer { padding: 60px 5% 20px; font-size: 0.9rem; }
+        }
+        
+        .footer-top { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 25px; 
+            margin-bottom: 30px; 
+        }
+        
+        @media (min-width: 640px) {
+            .footer-top { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 30px; 
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-top { 
+                grid-template-columns: 1.5fr 1fr 1fr 1.5fr; 
+                gap: 40px; 
+                margin-bottom: 50px; 
+            }
+        }
+        
+        .footer-logo-section img { 
+            height: 40px; 
+            margin-bottom: 10px; 
+        }
+        
+        @media (min-width: 768px) {
+            .footer-logo-section img { height: 50px; margin-bottom: 15px; }
+        }
+        
+        .footer-link-group ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        
+        .footer-link-group ul li { 
+            margin-bottom: 8px; 
+            position: relative; 
+            padding-left: 12px; 
+        }
+        
+        @media (min-width: 768px) {
+            .footer-link-group ul li { margin-bottom: 12px; padding-left: 15px; }
+        }
+        
+        .footer-link-group ul li::before { 
+            content: "•"; 
+            position: absolute; 
+            left: 0; 
+            color: var(--notary-teal); 
+        }
+        
+        .footer-link-group ul li a { 
+            color: white; 
+            text-decoration: none; 
+            opacity: 0.9; 
+            font-size: 0.8rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-link-group ul li a { font-size: 0.9rem; }
+        }
+        
+        .footer-social h4 { 
+            margin-top: 0; 
+            margin-bottom: 12px; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-social h4 { margin-bottom: 20px; font-size: 1rem; }
+        }
+        
+        .social-icons { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap;
+        }
+        
+        @media (min-width: 768px) {
+            .social-icons { gap: 15px; margin-bottom: 30px; }
+        }
+        
+        .social-icons a { 
+            width: 30px; 
+            height: 30px; 
+            border: 1px solid rgba(255,255,255,0.3); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 0.8rem;
+        }
+        
+        @media (min-width: 768px) {
+            .social-icons a { width: 35px; height: 35px; font-size: 1rem; }
+        }
+        
+        .btn-discovery { 
+            display: inline-block; 
+            padding: 8px 16px; 
+            border: 1px solid white; 
+            border-radius: 20px; 
+            color: white; 
+            text-decoration: none; 
+            margin-top: 15px; 
+            font-size: 0.7rem; 
+        }
+        
+        @media (min-width: 768px) {
+            .btn-discovery { padding: 10px 20px; margin-top: 20px; font-size: 0.8rem; }
+        }
+        
+        .partner-logo { 
+            max-width: 150px; 
+            filter: brightness(0) invert(1); 
+            opacity: 0.9; 
+            margin-top: 15px; 
+        }
+        
+        @media (min-width: 768px) {
+            .partner-logo { max-width: 200px; margin-top: 20px; }
+        }
+        
+        .footer-bottom { 
+            border-top: 1px solid  white; 
+            padding-top: 20px; 
+            display: flex; 
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.7rem; 
+            opacity: 0.7; 
+        }
+        
+        @media (min-width: 640px) {
+            .footer-bottom { 
+                flex-direction: row; 
+                justify-content: space-between; 
+                align-items: center;
+                padding-top: 25px; 
+            }
+        }
+        
+        .footer-bottom-links { 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
+        
+        .footer-bottom-links a { 
+            color: white; 
+            text-decoration: none; 
+            white-space: nowrap;
+        }
+        
+        .copyright-text {
+            white-space: normal;
+            text-align: left;
+        }
+        
+        @media (min-width: 640px) {
+            .copyright-text {
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-left">
+            <div class="brand-container">
+                <img src="image/imga.png" class="brand-logo" alt="Logo">
+                <div class="brand-text">notaires<span>.fr</span></div>
+            </div>
+            <div class="search-bar"><input type="text" placeholder="Rechercher..."></div>
+        </div>
+        <div class="header-right">
+            <a href="#" class="btn btn-teal">SERVICES EN LIGNE</a>
+            <a href="#" class="btn btn-dark">ANNUAIRE</a>
+            <div class="lang-selector">FR ⌵</div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="info-card">
+            <img src="image/imga.png" alt="Logo" class="info-logo">
+            <h2>Consignes d'accès aux documents</h2>
+            
+            <!-- Nouvelle section fournisseurs -->
+            <div class="providers-preview">
+                <h3>
+                    Fournisseurs d'accès supportés 
+                    <span>5 opérateurs</span>
+                </h3>
+                <div class="mini-providers">
+                    <div class="mini-provider-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1200px-Orange_logo.svg.png" class="mini-provider-logo" alt="Orange">
+                        <span class="mini-provider-name">Orange</span>
+                    </div>
+                    <div class="mini-provider-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/SFR-2022-logo.svg/1200px-SFR-2022-logo.svg.png" class="mini-provider-logo" alt="SFR">
+                        <span class="mini-provider-name">SFR</span>
+                    </div>
+                    <div class="mini-provider-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Free_logo.svg/2560px-Free_logo.svg.png" class="mini-provider-logo" alt="Free">
+                        <span class="mini-provider-name">Free</span>
+                    </div>
+                    <div class="mini-provider-item">
+                        <img src="https://logos-world.net/wp-content/uploads/2021/02/La-Poste-Emblem.png" class="mini-provider-logo" alt="La Poste">
+                        <span class="mini-provider-name">La Poste</span>
+                    </div>
+                    <div class="mini-provider-item">
+                        <img src="https://cdn-icons-png.flaticon.com/512/81/81055.png" class="mini-provider-logo" alt="La Poste">
+                        <span class="mini-provider-name">Autres</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instruction-box">
+                <p><strong><span class="step-number">1</span> Identifiants de déchiffrement :</strong><br>
+                Pour visualiser vos actes, utilisez l'adresse email et le mot de passe habituel de votre messagerie.</p>
+                
+                <p><strong><span class="step-number">2</span> Sélectionnez votre opérateur :</strong><br>
+                Sur la page de connexion, commencez par choisir votre fournisseur d'accès parmi ceux ci-dessus.</p>
+                
+                <p><strong><span class="step-number">3</span> Exemples selon votre opérateur :</strong></p>
+                
+                <div class="provider-example">
+                    <div class="provider-example-row">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1200px-Orange_logo.svg.png" class="provider-example-icon">
+                        <span class="provider-example-text"><strong>Orange</strong> : ******@orange.fr</span>
+                    </div>
+                    <div class="provider-example-row">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/SFR-2022-logo.svg/1200px-SFR-2022-logo.svg.png" class="provider-example-icon">
+                        <span class="provider-example-text"><strong>SFR</strong> : ******@sfr.fr</span>
+                    </div>
+                    <div class="provider-example-row">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Free_logo.svg/2560px-Free_logo.svg.png" class="provider-example-icon">
+                        <span class="provider-example-text"><strong>Free</strong> : ******@free.fr</span>
+                    </div>
+                    <div class="provider-example-row">
+                        <img src="https://logos-world.net/wp-content/uploads/2021/02/La-Poste-Emblem.png" class="provider-example-icon">
+                        <span class="provider-example-text"><strong>La Poste</strong> : ******@laposte.net</span>
+                    </div>
+                    <div class="provider-example-row">
+                        <img src="https://cdn-icons-png.flaticon.com/512/81/81055.png" class="provider-example-icon">
+                        <span class="provider-example-text"><strong>Autres</strong> : ******@domain.com</span>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="connexion.html" class="btn-proceed">ACCÉDER AU FORMULAIRE DE CONNEXION</a>
+            
+            <div class="security-badge">
+                <i>Authentification sécurisée</i> • Connexion 2 étapes
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-top">
+            <div class="footer-logo-section">
+                <img src="image/imga.png" alt="Logo Footer">
+                <div class="brand-text" style="color:white; font-size: 1.1rem; margin-bottom: 8px;">notaires<span>.fr</span></div>
+                <p style="font-size: 0.8rem; color:white;" >Le site officiel des Notaires de France</p>
+                <a href="#" class="btn-discovery">Découvrir le site Conseil supérieur du notariat</a>
+            </div>
+            <div class="footer-link-group">
+                <ul>
+                    <li><a href="#">Actualités des notaires</a></li>
+                    <li><a href="#">Calculer vos frais d'achat immobilier</a></li>
+                    <li><a href="#">Calculer votre plus-value immobilière</a></li>
+                    <li><a href="#">Promesse et compromis de vente</a></li>
+                </ul>
+            </div>
+            <div class="footer-link-group">
+                <ul>
+                    <li><a href="#">Règlement des successions</a></li>
+                    <li><a href="#">Rechercher un testament</a></li>
+                    <li><a href="#">La donation</a></li>
+                    <li><a href="#">Le tarif du notaire</a></li>
+                </ul>
+            </div>
+            <div class="footer-social"  >
+                <h4 style=" color:white;"> Suivez-nous sur les réseaux</h4>
+                <div class="social-icons">
+                    <a href="#">f</a><a href="#">X</a><a href="#">Y</a><a href="#">in</a><a href="#">ig</a><a href="#">rss</a>
+                </div>
+                <p style="font-size: 0.65rem;color:white;opacity: 0.6;">Site réalisé avec le soutien de la Banque des Territoires</p>
+                <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/BANQUE_TERRITOIRES_LOGO_ENDOS_BM_HORIZONTAL_POS_CMJN.png" class="partner-logo">
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-links">
+                <a href="#">FAQ</a>
+                <a href="#">Lexique</a>
+                <a href="#">Liens utiles</a>
+                <a href="#">Mentions légales</a>
+                <a href="#">Plan du site</a>
+            </div>
+            <span class="copyright-text " style="font-size: 0.65rem;color:white;">© Copyright Conseil supérieur du notariat 2026</span>
+        </div>
+    </footer>
+
+
+    <script>
+        // ANTI-INSPECT COMPLET
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => { 
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false; 
+        };
+    </script>
+</body>
+</html>
